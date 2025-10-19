@@ -36,14 +36,13 @@ test.describe("[REGISTER PAGE]", { tag: "@smoke" }, () => {
       const usernameInput = page.locator("#userNameOnRegister");
       const passwordInput = page.locator("#passwordOnRegister");
       const registerButton = page.locator("#register");
+      const successText = page.locator("text=Successfully registered! Please, click Back to return on login page");
 
       await usernameInput.fill(validCredentials.username);
       await passwordInput.fill(validCredentials.password);
       await registerButton.click();
 
-      await expect(
-        page.locator("text=Successfully registered! Please, click Back to return on login page"),
-      ).toBeVisible();
+      await expect(successText).toBeVisible();
     },
   );
 
@@ -73,13 +72,12 @@ test.describe("[REGISTER PAGE]", { tag: "@smoke" }, () => {
     const loginUsernameInput = page.locator("#userName");
     const loginPasswordInput = page.locator("#password");
     const submitButton = page.locator("#submit");
+    const successText = page.locator("text=Successfully registered! Please, click Back to return on login page");
 
     await usernameInput.fill(validCredentials.username);
     await passwordInput.fill(validCredentials.password);
     await registerButton.click();
-    await expect(
-      page.locator("text=Successfully registered! Please, click Back to return on login page"),
-    ).toBeVisible();
+    await expect(successText).toBeVisible();
     await expect(page.locator("#backOnRegister")).toBeVisible();
     await backButton.click();
 
@@ -87,5 +85,46 @@ test.describe("[REGISTER PAGE]", { tag: "@smoke" }, () => {
     await loginPasswordInput.fill(validCredentials.password);
     await submitButton.click();
     await expect(page.locator(`text=Hello, ${validCredentials.username}`)).toBeVisible();
+  });
+});
+
+/*
+Homework 20 Task 2
+Разработать тест со следующими шагами:
+  - открыть https://anatoly-karpovich.github.io/demo-login-form/
+  - Засунуть в localStorage браузера данные test@gmail.com / SecretPw123!@# для логина на сайт
+  - Залогиниться с данными что вы вставили в localStorage
+  - Завалидировать успешный логин
+
+  Рекоммендации:
+  - Для доступа к localStorage используйте https://playwright.dev/docs/evaluating
+*/
+
+test.describe("[LOGIN PAGE] Homework 20 Task 2", () => {
+  const credentials = {
+    name: "test@gmail.com",
+    password: "SecretPw123!@#",
+  };
+
+  test.beforeEach(async ({ page }) => {
+    const url = "https://anatoly-karpovich.github.io/demo-login-form/";
+    await page.goto(url);
+  });
+
+  test("Local storage test", async ({ page }) => {
+    const loginUsernameInput = page.locator("#userName");
+    const loginPasswordInput = page.locator("#password");
+    const submitButton = page.locator("#submit");
+
+    await page.evaluate((data) => {
+      localStorage.setItem(data.name, JSON.stringify(data));
+    }, credentials);
+
+    await page.reload();
+
+    await loginUsernameInput.fill(credentials.name);
+    await loginPasswordInput.fill(credentials.password);
+    await submitButton.click();
+    await expect(page.locator(`text=Hello, ${credentials.name}`)).toBeVisible();
   });
 });
