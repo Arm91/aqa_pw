@@ -27,10 +27,17 @@
     "globals": "^16.4.0",
     "husky": "^9.1.7",
     "prettier": "^3.6.2",
-    "typescript-eslint": "^8.45.0"
+    "typescript-eslint": "^8.45.0",
+    "@types/ajv": "^0.0.5",
+    "@types/dotenv": "^6.1.1",
+    "@types/lodash": "^4.17.20"
   },
   "dependencies": {
-    "lint-staged": "^16.2.3"
+    "@faker-js/faker": "^9.9.0",
+    "ajv": "^8.17.1",
+    "dotenv": "^17.2.3",
+    "lint-staged": "^16.2.3",
+    "lodash": "^4.17.21"
   },
   "lint-staged": {
     "src/**/*.{ts,tsx,js,jsx}": [
